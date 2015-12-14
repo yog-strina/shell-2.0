@@ -13,6 +13,11 @@
 # define ANSI_COLOUR_RED_BLACK		"\033[31;40m"
 # define ANSI_COLOUR_CYAN_BLACK		"\033[36;40m"
 # define ANSI_COLOUR_YELLOW_BLACK	"\033[33;40m"
+# define COLOUR				9
+# define COLOUR_RESET			5
+# define TAB_COLOUR			10
+# define CMPLX_MIN			3
+# define CMPLX_MAX			10
 
 typedef struct	Plate
 {

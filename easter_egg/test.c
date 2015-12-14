@@ -1,5 +1,6 @@
-#include "hanoi.h"
+#include <curses.h>
 int main()
 {
-  printf("%d\n", sizeof(ANSI_COLOUR_RED_BLACK));
+  initscr();
+  setsyx(0, 0);
 }
