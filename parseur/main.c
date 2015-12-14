@@ -12,7 +12,6 @@ int liredictionnaires()
     DIR* FD;
     struct dirent* in_file;
     FILE    *entry_file;
-    char    buffer[BUFSIZ];
     char    cwd[1024];
 
 
@@ -42,7 +41,7 @@ int liredictionnaires()
             continue;
         /* Open directory entry file for common operation */
         /* TODO : change permissions to meet your need! */
-        entry_file = fopen(in_file->d_name, "rw");
+        entry_file = fopen(in_file->d_name, "r");
         if (entry_file == NULL)
         {
             fprintf(stderr, "Error : Failed to open entry file - %s\n", strerror(errno));
@@ -50,14 +49,10 @@ int liredictionnaires()
             return 1;
         }
 
-        /* Doing some struf with entry_file : */
-        /* For example use fgets */
-        while (fgets(buffer, BUFSIZ, entry_file) != NULL)
-        {
-            /* Use fprintf or fwrite to write some stuff into common_file*/
-        }
 
-        /* When you finish with the file, close it */
+
+
+
         fclose(entry_file);
     }
 
