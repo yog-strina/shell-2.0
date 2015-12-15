@@ -1,7 +1,7 @@
 #ifndef	_HANOI_H_
 # define _HANOI_H_
 
-# define ASK_CMPLX			"Choisissez un niveau de difficulté (3-10)\n"
+# define ASK_CMPLX			"Choisissez un niveau de difficulté "
 # define ASK_MOVE			"Choisissez un mouvement:"
 # define BAD_REQUEST			"Mauvais mouvement, rtfm"
 # define CMPLX_MIN			3
