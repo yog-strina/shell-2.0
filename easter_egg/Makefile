@@ -2,7 +2,7 @@ NAME	=	shell2.0
 
 SRCS	= 	easter.c
 
-CFLAGS	+=	-W -Wall -Wextra -ansi -pedantic
+CFLAGS	+=	-W -Wall -Wextra -ansi -pedantic -D_GNU_SOURCE -g
 
 LDFLAGS	+=	-lncurses
 
