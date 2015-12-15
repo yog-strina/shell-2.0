@@ -134,6 +134,8 @@ int compterlignes()
 
     m--;
 
+    //printf("%d\n",m);
+
     /* Don't forget to close common file before leaving */
 
     return m;
@@ -161,6 +163,11 @@ int liredictionnaires(int nombrelignes)
     int     i = 1;
     char    *commande=NULL;
     int     p = 0;
+    char    *longueur=NULL;
+
+    listecommandesnaturel.keyWords = calloc(nombrelignes, sizeof(char*));
+
+    listecommandesnaturel.cmd = calloc(nombrelignes, sizeof(char*));
 
 
 
@@ -215,9 +222,12 @@ int liredictionnaires(int nombrelignes)
             return 1;
         }
 
-        listecommandesnaturel.keyWords = malloc(nombrelignes * sizeof(char*));
+   //     listecommandesnaturel.keyWords = malloc(nombrelignes * sizeof(char*));
 
-        listecommandesnaturel.cmd = malloc(nombrelignes * sizeof(char*));
+   //     listecommandesnaturel.cmd = malloc(nombrelignes * sizeof(char*));
+
+
+
 
 
 
@@ -226,6 +236,8 @@ int liredictionnaires(int nombrelignes)
 
         while (fgets(buffer, BUFSIZ, entry_file) != NULL)
         {
+
+
 
 
             if (nomfichier != NULL && strcmp(in_file->d_name,nomfichier) != 0)
@@ -238,27 +250,30 @@ int liredictionnaires(int nombrelignes)
             }
 
 
-            if (i == 1)
+                if (i == 1)
 
-            {
-            commande = strdup(buffer);
+                {
+                commande = strdup(buffer);
 
-            printf("%s\n", commande);
-
-            p--;
-            }
-
-            else
-
-            {
-
-            listecommandesnaturel.cmd[p] = strdup(commande);
-
-            listecommandesnaturel.keyWords[p] = strdup(buffer);
+                printf("%s\n", commande);
 
 
+                }
 
-            }
+                else if (p < nombrelignes)
+
+                {
+
+                longueur = strdup(buffer);
+                printf("%ld\n", sizeof(longueur));
+
+                listecommandesnaturel.cmd[p] = strdup(commande);
+
+                listecommandesnaturel.keyWords[p] = strdup(buffer);
+
+                p++;
+
+                }
 
             nomfichier = strdup(in_file->d_name);
 
@@ -266,7 +281,9 @@ int liredictionnaires(int nombrelignes)
 
             i++;
 
-            p++;
+
+
+
 
 
 
@@ -292,8 +309,8 @@ int liredictionnaires(int nombrelignes)
         strcpy (dossierdictionnaires, "dictionnaires/");
     }
 
-    printf("Première ligne : %s\n", listecommandesnaturel.cmd[0]);
-    printf("Première ligne : %s\n", listecommandesnaturel.keyWords[0]);
+    printf("Première ligne : %s\n", listecommandesnaturel.cmd[3]);
+    printf("Première ligne : %s\n", listecommandesnaturel.keyWords[3]);
 
     /* Don't forget to close common file before leaving */
     free(listecommandesnaturel.keyWords);
