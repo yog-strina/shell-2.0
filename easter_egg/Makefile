@@ -1,6 +1,9 @@
-NAME	=	shell2.0
+NAME	=	hanoi
 
-SRCS	= 	easter.c
+SRCS	= 	easter.c \
+	  	game_cmd.c \
+		plate.c \
+		tower.c
 
 CFLAGS	+=	-W -Wall -Wextra -ansi -pedantic -D_GNU_SOURCE -g
 
