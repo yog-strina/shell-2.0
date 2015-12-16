@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <errno.h>
 
+
  struct    command
     {
     char    **cmd;
@@ -13,6 +14,39 @@
     };
 
 struct command listecommandesnaturel;
+
+
+char *cleanstring(char *chainedecaractere)
+
+{
+
+    if ((strlen(chainedecaractere)>0) && (chainedecaractere[strlen (chainedecaractere) - 1] == '\n'))
+            chainedecaractere[strlen (chainedecaractere) - 1] = '\0';
+
+
+    return chainedecaractere;
+
+
+
+
+
+}
+
+char *replace_str(char *str, char *orig, char *rep)
+{
+  static char buffer[4096];
+  char *p;
+
+  if(!(p = strstr(str, orig)))  // Is 'orig' even in 'str'?
+    return str;
+
+  strncpy(buffer, str, p-str); // Copy characters from 'str' start to 'orig' st$
+  buffer[p-str] = '\0';
+
+  sprintf(buffer+(p-str), "%s%s", rep, p+strlen(orig));
+
+  return buffer;
+}
 
 
 
@@ -151,7 +185,7 @@ int compterlignes()
 
 
 /* This is just a sample code, modify it to meet your need */
-int liredictionnaires(int nombrelignes)
+int initialiserdictionnaires(int nombrelignes)
 {
     DIR*    FD;
     struct  dirent* in_file;
@@ -309,22 +343,88 @@ int liredictionnaires(int nombrelignes)
         strcpy (dossierdictionnaires, "dictionnaires/");
     }
 
-    printf("Première ligne : %s\n", listecommandesnaturel.cmd[3]);
-    printf("Première ligne : %s\n", listecommandesnaturel.keyWords[3]);
+    printf("Première ligne : %s\n", listecommandesnaturel.cmd[0]);
+    printf("Première ligne : %s\n", listecommandesnaturel.keyWords[0]);
 
     /* Don't forget to close common file before leaving */
+
+    return 0;
+}
+
+int modeexpert(int nombrelignes)
+
+{
+    int     i=0;
+    int     p;
+    char    *keyword=NULL;
+    char    *cmd=NULL;
+    char    *entreetronquee=NULL;
+    /* Allocate memory and check if okay. */
+    char    *entree=NULL;
+
+
+    entree = calloc(256, sizeof(char));
+    printf ("Que souhaitez-vous faire maintenant ?\n");
+    fgets (entree, 256, stdin);
+    entree = strdup(cleanstring(entree));
+
+    printf("%s\n", entree);
+
+    while (i < nombrelignes)
+
+    {
+
+        keyword = strdup(listecommandesnaturel.keyWords[i]);
+        keyword = strdup(cleanstring(keyword));
+
+        p = strlen(keyword);
+
+
+
+        entreetronquee = strndup(entree,p);
+
+
+        if (strcmp(entreetronquee,keyword) == 0)
+
+        {
+
+        printf("Commande trouvée\n");
+        cmd = strdup(replace_str(entree,keyword,cleanstring(listecommandesnaturel.cmd[i])));
+        printf("%s", cmd);
+
+        }
+        i++;
+
+
+
+    }
+
+
+
+
+
+
+    free(entree);
     free(listecommandesnaturel.keyWords);
     free(listecommandesnaturel.cmd);
-    return 0;
+
+
+
+
 }
 
 int main()
 
 {
+int    nombrelignes;
 
+nombrelignes = compterlignes();
 
+initialiserdictionnaires(nombrelignes);
 
-liredictionnaires(compterlignes());
+modeexpert(nombrelignes);
+
+//liredictionnaires(compterlignes());
 
 return 0;
 }
