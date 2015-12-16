@@ -356,6 +356,7 @@ int modeexpert(int nombrelignes)
 {
     int     i=0;
     int     p;
+    int     q=0;
     char    *keyword=NULL;
     char    *cmd=NULL;
     char    *entreetronquee=NULL;
@@ -370,7 +371,17 @@ int modeexpert(int nombrelignes)
 
     printf("%s\n", entree);
 
-    while (i < nombrelignes)
+    if (strcmp(entree,"exit") == 0 )
+    {
+
+    free(entree);
+    free(listecommandesnaturel.keyWords);
+    free(listecommandesnaturel.cmd);
+
+    exit(exit);
+    }
+
+    while (i < nombrelignes && q == 0 )
 
     {
 
@@ -380,25 +391,45 @@ int modeexpert(int nombrelignes)
         p = strlen(keyword);
 
 
-
         entreetronquee = strndup(entree,p);
+
+        if (strlen(listecommandesnaturel.cmd[i]) == 1 && strstr(cleanstring(entree),keyword) != 0 )
+        {
+
+        entree = strdup(replace_str(entree,keyword,""));
+
+        }
 
 
         if (strcmp(entreetronquee,keyword) == 0)
 
         {
-
+        q = 1;
         printf("Commande trouvée\n");
         cmd = strdup(replace_str(entree,keyword,cleanstring(listecommandesnaturel.cmd[i])));
         printf("%s", cmd);
 
         }
+
+        if (i == (nombrelignes - 1))
+        {
+
+        printf("Entrée introuvable, veuillez reformulez votre demande.\n");
+
+        free(entree);
+        free(listecommandesnaturel.keyWords);
+        free(listecommandesnaturel.cmd);
+
+        modeexpert(nombrelignes);
+        }
         i++;
 
 
 
-    }
 
+
+
+    }
 
 
 
