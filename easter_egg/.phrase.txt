@@ -1,0 +1,16 @@
+1Choisissez un niveau de difficulté
+1Choisissez un mouvement:
+1Mauvais mouvement
+1VICTOIRE!!
+1Vous avez réussi en 
+1 mouvements et 
+1 secondes
+1Entrez votre nom:
+2Choose a complexity level
+2Choose a move:
+2Bad move
+2VICTORY!!
+2You made it in 
+2 moves and 
+2 secondes
+2Enter your name:

@@ -21,27 +21,27 @@ void	catch_sigint(int sig)	/* Appelée lors de l'interception d'un SIGINT et mod
   exit(EXIT_SUCCESS);		/* Quitte le programme en précisant que tout a fonctionné */
 }
 
-void	end_screen(int moves, int t1, int t2)
+void	end_screen(int moves, int t1, int t2, char **phrase)
 {
   char	name[6];
   FILE	*score;
 
   erase();
-  mvprintw(getmaxy(stdscr) / 4, getmaxx(stdscr) / 3, "YOU WON!!!");
+  mvprintw(getmaxy(stdscr) / 4, getmaxx(stdscr) / 3, phrase[VICTORY]);
   mvprintw(getmaxy(stdscr) / 4 + 1, getmaxx(stdscr) / 3,
-	   "You made it in %d moves and %d secondes!",
-	   moves, t2 - t1);
+	   "%s%d%s%d%s",
+	   phrase[U_MADE_IT], moves, phrase[MOVES_AND], t2 - t1, phrase[SECONDES]);
   refresh();
-  mvprintw(getmaxy(stdscr) / 4 + 2, getmaxx(stdscr) / 3, "Enter your name: ");
+  mvprintw(getmaxy(stdscr) / 4 + 2, getmaxx(stdscr) / 3, phrase[ENTER_NAME]);
   mvgetnstr(getmaxy(stdscr) / 4 + 2, getmaxx(stdscr) / 3 + 17, name, 6);
   if ((score = fopen("score.txt", "a")) == NULL)
     exit(EXIT_FAILURE);
-  fprintf(score, "PLAYER: \"%s\"\tTIME: %ds\tMOVES:%d\n",
+  fprintf(score, "PLAYER: %s\tTIME: %ds\tMOVES:%d\n",
 	  name, t2 - t1, moves);
   exit(EXIT_SUCCESS);
 }
 
-void		game_loop(int cmplx)	/* Fonction qui fait tourner le jeu en boucle */
+void		game_loop(int cmplx, char **phrase)	/* Fonction qui fait tourner le jeu en boucle */
 {
   Tower		**tower;		/* Tableau de structures qui contient les 3 tours */
   char		cmd[2];
@@ -62,11 +62,12 @@ void		game_loop(int cmplx)	/* Fonction qui fait tourner le jeu en boucle */
       erase();
       disp_towers(tower, cmplx);
       bzero(cmd, 2);
-      mvprintw(y, x, ASK_MOVE);
-      mvgetnstr(y + 1, x, cmd, 2);
+      mvprintw(0, 0, "%d", moves);
+      mvprintw(y, x, phrase[ASK_MOVE]);
+      mvgetnstr(y, x + strlen(phrase[ASK_MOVE]) + 1, cmd, 2);
       while (check_cmd(cmd, tower) == -1)
 	{
-	  mvprintw(y + 2, x, BAD_REQUEST);
+	  mvprintw(y + 2, x, phrase[BAD_MOVE]);
 	  mvgetnstr(y + 1, x, cmd, 2);
 	}
       execute_cmd(tower[cmd[0] - '0' - 1], tower[cmd[1] - '0' - 1]);
@@ -74,7 +75,7 @@ void		game_loop(int cmplx)	/* Fonction qui fait tourner le jeu en boucle */
       disp_towers(tower, cmplx);
     }
   t2 = time(NULL);
-  end_screen(moves, (int)t1, (int)t2);
+  end_screen(moves, (int)t1, (int)t2, phrase);
 }
 
 int	check_cmplxt(char buf[3]) /* Fonction qui vérifie la difficulté */
@@ -90,20 +91,23 @@ int	check_cmplxt(char buf[3]) /* Fonction qui vérifie la difficulté */
 void	hanoi_towers()	/* Fonction qui lance la fenêtre de jeu */
 {
   char	buf[3];			/* Tableau de char qui va contenir la difficulté */
+  char	**phrase;
 
+  phrase = NULL;
+  phrase = fill_phrase(phrase);
   atexit(my_endwin);		/* Quand exit() est appelé, la fonction my_endwin() l'est aussi */
   signal(SIGINT, catch_sigint);	/* Intercepte un SIGINT et modifie son action */
   do
     {
-      write(1, ASK_CMPLX, strlen(ASK_CMPLX));	/* Demande le niveau de difficulté */
-      printf("(%d-%d)\n", CMPLX_MIN, CMPLX_MAX);
+      write(1, phrase[ASK_CMPLX], strlen(phrase[ASK_CMPLX]));	/* Demande le niveau de difficulté */
+      printf(" (%d-%d)\n", CMPLX_MIN, CMPLX_MAX);
       if (read(1, buf, 3) == -1)		/* Lit le niveau de difficulté et le stock dans buf */
 	exit(-1);				/* Quitte en donnant -1 si read() échoue */
     }
   while (check_cmplxt(buf) == -1);		/* Boucle tant que la difficulté n'est pas bonne */
   initscr();		/* Initialise les routines d'ecran et de manipulation */
   start_color();	/* Permet de pouvoir manipuler les couleurs */
-  game_loop(atoi(buf));	/* Boucle de jeu */
+  game_loop(atoi(buf), phrase);	/* Boucle de jeu */
   endwin();		/* Met fin à la fenêtre */
   exit(EXIT_SUCCESS);	/* Quitte en prévenant que la fonction s'est finie sans problème */
 }

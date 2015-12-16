@@ -3,7 +3,8 @@ NAME	=	hanoi
 SRCS	= 	easter.c \
 	  	game_cmd.c \
 		plate.c \
-		tower.c
+		tower.c \
+	  	phrase.c
 
 CFLAGS	+=	-W -Wall -Wextra -ansi -pedantic -D_GNU_SOURCE -g
 
