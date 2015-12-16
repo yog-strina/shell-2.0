@@ -8,7 +8,7 @@
 # define U_MADE_IT	4
 # define MOVES_AND	5
 # define SECONDES	6
-# define ENTER_NAME	7
+# define PRESS_ENTER	7
 # define BAD_PHRASE	"Phrases file is badly formated\n"
 # define BAD_SETTINGS	"Settings is badly formated\n"
 # define SETTINGS	"settings.config"
