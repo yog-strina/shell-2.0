@@ -363,7 +363,7 @@ int initialiserdictionnaires(int nombrelignes,char *lang)
     return 0;
 }
 
-int modeexpert(int nombrelignes,char *lang)
+int modenaturel(int nombrelignes,char *lang)
 
 {
     int     i=0;
@@ -461,7 +461,7 @@ int modeexpert(int nombrelignes,char *lang)
             free(cmd);
             free(entreetronquee);
 
-            modeexpert(nombrelignes,lang);
+            modenaturel(nombrelignes,lang);
 
             }
 
@@ -496,7 +496,7 @@ int modeexpert(int nombrelignes,char *lang)
         free(cmd);
         free(entreetronquee);
 
-        modeexpert(nombrelignes,lang);
+        modenaturel(nombrelignes,lang);
         }
         i++;
 
@@ -532,7 +532,7 @@ nombrelignes = compterlignes("fr");
 
 initialiserdictionnaires(nombrelignes,"fr");
 
-modeexpert(nombrelignes,"fr");
+modenaturel(nombrelignes,"fr");
 
 return 0;
 }
