@@ -23,7 +23,8 @@ void	catch_sigint(int sig)	/* Appelée lors de l'interception d'un SIGINT et mod
 
 void	end_screen(int moves, int t1, int t2, char **phrase)
 {
-  char	name[1];
+  char	key[1];
+  char	*name;
   FILE	*score;
 
   erase();
@@ -34,10 +35,11 @@ void	end_screen(int moves, int t1, int t2, char **phrase)
   refresh();
   mvprintw(getmaxy(stdscr) / 4 + 2, getmaxx(stdscr) / 3, phrase[PRESS_ENTER]);
   noecho();
-  mvgetnstr(getmaxy(stdscr) / 4 + strlen(phrase[PRESS_ENTER]) + 1, getmaxx(stdscr) / 3, name, 0);
+  mvgetnstr(getmaxy(stdscr) / 4 + strlen(phrase[PRESS_ENTER]) + 1, getmaxx(stdscr) / 3, key, 0);
   echo();
   if ((score = fopen("score.txt", "a")) == NULL)
     exit(EXIT_FAILURE);
+  name = strdup(getenv("USER"));
   fprintf(score, "PLAYER: %s\tTIME: %ds\tMOVES:%d\n",
 	  name, t2 - t1, moves);
   exit(EXIT_SUCCESS);
