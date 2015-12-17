@@ -451,6 +451,26 @@ int modenaturel(int nombrelignes,char *lang)
 
             }
 
+            else if (strstr(cmd,"easter egg") != 0)
+
+            {
+            free(entree);
+            free(listecommandesnaturel.keyWords);
+            free(listecommandesnaturel.cmd);
+            free(keyword);
+            free(cmd);
+            free(entreetronquee);
+            hanoi_towers();
+
+
+
+            }
+
+
+
+
+
+
             else
             {
 
