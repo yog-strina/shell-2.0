@@ -456,6 +456,23 @@ int modenaturel(int nombrelignes,char *lang)
 
             system(cmd);
 
+            if(strcmp(lang,"fr") == 0 )
+            {
+
+            printf("Commande exécutée\n\n");
+
+            }
+
+
+            else if (strcmp(lang,"en") == 0)
+
+            {
+
+            printf("Command executed\n\n");
+
+            }
+
+
             free(entree);
             free(keyword);
             free(cmd);
@@ -528,11 +545,11 @@ int main()
 {
 int    nombrelignes;
 
-nombrelignes = compterlignes("fr");
+nombrelignes = compterlignes("en");
 
-initialiserdictionnaires(nombrelignes,"fr");
+initialiserdictionnaires(nombrelignes,"en");
 
-modenaturel(nombrelignes,"fr");
+modenaturel(nombrelignes,"en");
 
 return 0;
 }
