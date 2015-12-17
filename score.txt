@@ -1,0 +1,4 @@
+PLAYER: quentin	TIME: 5s	MOVES:7
+PLAYER: quentin	TIME: 6s	MOVES:7
+PLAYER: quentin	TIME: 10s	MOVES:12
+PLAYER: quentin	TIME: 5s	MOVES:7

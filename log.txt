@@ -1,0 +1,5 @@
+Le programme a été ouvert
+L'utilisateur a entré la valeur 5 pour a
+L'utilisateur a entré la valeur 6 pour b
+La somme de 5 et 6 est donc 11
+Le programme se termine

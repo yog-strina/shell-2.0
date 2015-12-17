@@ -1,0 +1,13 @@
+
+Que voulez-vous faire maintenant ?
+------------------------------------------------------------
+1-Lister les utilisateurs
+2-Se connecter avec un autre utilisateur
+3-Se connecter en root
+4-Créer un utlisateur (nécessite les privilèges sudo)
+5-Supprimer un utilisateur (nécessite les privilèges sudo)
+6-Retour au menu principal
+------------------------------------------------------------
+Choix(1-6)?
+
+

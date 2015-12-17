@@ -1,0 +1,11 @@
+What do you want to do now ?
+----------------------------------------
+1-Show all users
+2-Connect as an other user
+3-Connect as root
+4-Create a user (needs sudo privilegies)
+5-Delete a user (needs sudo privilegies)
+6-Return to main menu
+----------------------------------------
+Choice(1-6)?
+
