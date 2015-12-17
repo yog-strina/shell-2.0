@@ -62,7 +62,6 @@ int compterlignes()
     int     m = 0;
     char    *nomfichier=NULL;
     int     i = 1;
-    char    *commande=NULL;
 
 
 
@@ -70,14 +69,8 @@ int compterlignes()
 
 
 
-
-    if (getcwd(cwd, sizeof(cwd)) != NULL)
-
-    {
-    fprintf(stdout, "Current working dir: %s\n", cwd);
-    }
-
-    else
+    /* On relève le repertoire dans lequel on travaille et on le stocke dans la variable cwd*/
+    if (getcwd(cwd, sizeof(cwd)) == NULL)
 
    {
     perror("getcwd() error");
@@ -86,7 +79,7 @@ int compterlignes()
 
 
 
-    /* Scanning the in directory */
+    /* On scanne les fichiers contenus dans le répretoire dictionnaires/ */
     if (NULL == (FD = opendir (strcat(cwd, "/dictionnaires/"))))
     {
         fprintf(stderr, "Error : Failed to open input directory - %s\n", strerror(errno));
@@ -95,9 +88,8 @@ int compterlignes()
     }
     while ((in_file = readdir(FD)))
     {
-        /* On linux/Unix we don't want current and parent directories
-         * On windows machine too, thanks Greg Hewgill
-         */
+        /* Etant donné que sous linux, les répertoires sont des fichiers, on vérifie que le fichier en question n'est pas un répertoire */
+
         if (!strcmp (in_file->d_name, "."))
             continue;
         if (!strcmp (in_file->d_name, ".."))
@@ -106,8 +98,7 @@ int compterlignes()
 
 
 
-        /* Open directory entry file for common operation */
-        /* TODO : change permissions to meet your need! */
+        /* On ouvre chaque fichier contenu dans le répertoire dictionnaires/ */
         entry_file = fopen(strcat(dossierdictionnaires, in_file->d_name), "r");
 
         if (entry_file == NULL)
@@ -117,38 +108,29 @@ int compterlignes()
             return 1;
         }
 
-
+        /* On met le contenu de chaque fichier dans un buffer */
         while (fgets(buffer, BUFSIZ, entry_file) != NULL)
 
         {
 
+            /* On réinitialise la variable i lorsqu'on change de fichier */
             if (nomfichier != NULL && strcmp(in_file->d_name,nomfichier) != 0)
             {
 
             i = 1;
-            printf ("Nouveau fichier\n");
 
 
             }
 
-
+            /*  Si on passe à un nouveau fichier, alors on décrémente la variable m qui contient le nombre de lignes */
             if (i == 1)
 
             {
-            commande = strdup(buffer);
-
-            printf("%s\n", commande);
 
             m--;
             }
 
-            else
 
-            {
-
-
-
-            }
 
             nomfichier = strdup(in_file->d_name);
 
@@ -159,18 +141,14 @@ int compterlignes()
 
         }
 
+        /* On ferme le fichier avant d'ouvrir le prochain */
 
         fclose(entry_file);
 
         strcpy (dossierdictionnaires, "dictionnaires/");
     }
 
-
-    m--;
-
-    //printf("%d\n",m);
-
-    /* Don't forget to close common file before leaving */
+    /* On renvoie le nombre de lignes total (en excluant les commandes) contenu dans les dictionnaires */
 
     return m;
 }
@@ -197,7 +175,8 @@ int initialiserdictionnaires(int nombrelignes)
     int     i = 1;
     char    *commande=NULL;
     int     p = 0;
-    char    *longueur=NULL;
+
+    /* On alloue la mémoire nécessaire à notre tableau en 2 dimensions */
 
     listecommandesnaturel.keyWords = calloc(nombrelignes, sizeof(char*));
 
@@ -208,15 +187,9 @@ int initialiserdictionnaires(int nombrelignes)
 
 
 
+    /* On relève le repertoire dans lequel on travaille et on le stocke dans la variable cwd*/
 
-
-    if (getcwd(cwd, sizeof(cwd)) != NULL)
-
-    {
-    fprintf(stdout, "Current working dir: %s\n", cwd);
-    }
-
-    else
+    if (getcwd(cwd, sizeof(cwd)) == NULL)
 
    {
     perror("getcwd() error");
@@ -225,7 +198,7 @@ int initialiserdictionnaires(int nombrelignes)
 
 
 
-    /* Scanning the in directory */
+    /* On scanne les fichiers contenus dans le répretoire dictionnaires/ */
     if (NULL == (FD = opendir (strcat(cwd, "/dictionnaires/"))))
     {
         fprintf(stderr, "Error : Failed to open input directory - %s\n", strerror(errno));
@@ -234,9 +207,8 @@ int initialiserdictionnaires(int nombrelignes)
     }
     while ((in_file = readdir(FD)))
     {
-        /* On linux/Unix we don't want current and parent directories
-         * On windows machine too, thanks Greg Hewgill
-         */
+        /* Etant donné que sous linux, les répertoires sont des fichiers, on vérifie que le fichier en question n'est pas un répertoire */
+
         if (!strcmp (in_file->d_name, "."))
             continue;
         if (!strcmp (in_file->d_name, ".."))
@@ -245,8 +217,8 @@ int initialiserdictionnaires(int nombrelignes)
 
 
 
-        /* Open directory entry file for common operation */
-        /* TODO : change permissions to meet your need! */
+        /* On ouvre chaque fichier contenu dans le répertoire dictionnaires/ */
+
         entry_file = fopen(strcat(dossierdictionnaires, in_file->d_name), "r");
 
         if (entry_file == NULL)
@@ -256,50 +228,39 @@ int initialiserdictionnaires(int nombrelignes)
             return 1;
         }
 
-   //     listecommandesnaturel.keyWords = malloc(nombrelignes * sizeof(char*));
 
-   //     listecommandesnaturel.cmd = malloc(nombrelignes * sizeof(char*));
-
-
-
-
-
-
-
-
+        /* On met le contenu de chaque fichier dans un buffer */
 
         while (fgets(buffer, BUFSIZ, entry_file) != NULL)
         {
 
 
-
+            /* On réinitialise la variable i lorsqu'on change de fichier */
 
             if (nomfichier != NULL && strcmp(in_file->d_name,nomfichier) != 0)
             {
 
-            i = 1;
-            printf ("Nouveau fichier\n");
-
+                i = 1;
 
             }
 
 
-                if (i == 1)
+            /*  Si on passe à un nouveau fichier, alors la première ligne est la commande à exécuter et on la stocke */
 
-                {
+            if (i == 1)
+
+            {
+
                 commande = strdup(buffer);
 
-                printf("%s\n", commande);
 
+            }
 
-                }
+            /* Si on est pas à la première ligne d'un fichier, alors on remplit le tableau jusqu'à sa limite */
 
-                else if (p < nombrelignes)
+            else if ( p < nombrelignes )
 
-                {
-
-                longueur = strdup(buffer);
-                printf("%ld\n", sizeof(longueur));
+            {
 
                 listecommandesnaturel.cmd[p] = strdup(commande);
 
@@ -307,35 +268,16 @@ int initialiserdictionnaires(int nombrelignes)
 
                 p++;
 
-                }
+            }
 
             nomfichier = strdup(in_file->d_name);
-
-            //printf ("%s\n", buffer);
 
             i++;
 
 
-
-
-
-
-
-
-
-
         }
 
-        //printf("%s\n", listecommandesnaturel.keyWords[0]);
-
-
-
-
-
-
-
-
-
+        /* On ferme le fichier avant d'ouvrir le prochain */
         fclose(entry_file);
 
 
@@ -343,10 +285,6 @@ int initialiserdictionnaires(int nombrelignes)
         strcpy (dossierdictionnaires, "dictionnaires/");
     }
 
-    printf("Première ligne : %s\n", listecommandesnaturel.cmd[0]);
-    printf("Première ligne : %s\n", listecommandesnaturel.keyWords[0]);
-
-    /* Don't forget to close common file before leaving */
 
     return 0;
 }
@@ -360,26 +298,20 @@ int modeexpert(int nombrelignes)
     char    *keyword=NULL;
     char    *cmd=NULL;
     char    *entreetronquee=NULL;
-    /* Allocate memory and check if okay. */
     char    *entree=NULL;
 
+    /* On alloue 256 caractères à la variable qui stockera l'entrée de l'utilisateur */
 
     entree = calloc(256, sizeof(char));
+
     printf ("Que souhaitez-vous faire maintenant ?\n");
+
     fgets (entree, 256, stdin);
+
+    /* On retire le caractère \n de l'entrée de l'utilisateur */
     entree = strdup(cleanstring(entree));
 
-    printf("%s\n", entree);
-
-    if (strcmp(entree,"exit") == 0 )
-    {
-
-    free(entree);
-    free(listecommandesnaturel.keyWords);
-    free(listecommandesnaturel.cmd);
-
-    exit(exit);
-    }
+    /* Tant que on a pas atteint la fin du tableau et qu'on a pas trouvé ce qu'on cherchait */
 
     while (i < nombrelignes && q == 0 )
 
@@ -393,21 +325,38 @@ int modeexpert(int nombrelignes)
 
         entreetronquee = strndup(entree,p);
 
-        if (strlen(listecommandesnaturel.cmd[i]) == 1 && strstr(cleanstring(entree),keyword) != 0 )
+        if (strlen(listecommandesnaturel.cmd[i]) == 1 && strstr(entree,keyword) != 0 )
         {
 
         entree = strdup(replace_str(entree,keyword,""));
 
         }
 
-
-        if (strcmp(entreetronquee,keyword) == 0)
+        if (strcmp(entreetronquee,keyword) == 0 && strlen(listecommandesnaturel.cmd[i]) > 1 && strlen(listecommandesnaturel.keyWords[i]) > 1 )
 
         {
         q = 1;
-        printf("Commande trouvée\n");
         cmd = strdup(replace_str(entree,keyword,cleanstring(listecommandesnaturel.cmd[i])));
-        printf("%s", cmd);
+
+            if (strstr(cmd,"exit") != 0)
+            {
+            free(entree);
+            free(listecommandesnaturel.keyWords);
+            free(listecommandesnaturel.cmd);
+            exit(0);
+
+            }
+
+            else
+            {
+
+            system(cmd);
+
+            free(entree);
+
+            modeexpert(nombrelignes);
+
+            }
 
         }
 
@@ -417,8 +366,6 @@ int modeexpert(int nombrelignes)
         printf("Entrée introuvable, veuillez reformulez votre demande.\n");
 
         free(entree);
-        free(listecommandesnaturel.keyWords);
-        free(listecommandesnaturel.cmd);
 
         modeexpert(nombrelignes);
         }
@@ -439,7 +386,7 @@ int modeexpert(int nombrelignes)
     free(listecommandesnaturel.keyWords);
     free(listecommandesnaturel.cmd);
 
-
+    return 0;
 
 
 }
@@ -454,8 +401,6 @@ nombrelignes = compterlignes();
 initialiserdictionnaires(nombrelignes);
 
 modeexpert(nombrelignes);
-
-//liredictionnaires(compterlignes());
 
 return 0;
 }
