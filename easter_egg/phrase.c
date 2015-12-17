@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include "hanoi.h"
 
-char		**fill_phrase(char **phrase)
+char		**fill_phrase(char **phrase) /* Permet de remplir phrase avec toutes les phrase à afficher en fonction du langage choisi dans le fichier de settings */
 {
   int		i;
   size_t	get;
@@ -12,6 +12,7 @@ char		**fill_phrase(char **phrase)
   FILE		*file;
   char		*line;
 
+  /* Ouvre le fichier de settings, le lit et récupère la langue choisie dans le fichier de settings, si le fichier est mal formaté, une erreur est renvoyée */
   i = 0;
   line = NULL;
   if ((phrase = malloc(sizeof(*phrase) * NB_PHRASE)) == NULL)
@@ -29,6 +30,8 @@ char		**fill_phrase(char **phrase)
     }
   lang = line[0] - '0';
   fclose(file);
+  /*******************************************************************************************/
+  /* Ouvre le fichier de settings, le lit et récupère les phrase écrit dans le fichier de phrase en fonction de la langue choisie et stocke les phrases dans le char **phrase, si le fichier de phrases est mal formaté une erreur est renvoyée */
   if ((file = fopen(PHRASE, "r")) == NULL)
     {
       write(2, BAD_PHRASE, strlen(BAD_PHRASE));
@@ -51,5 +54,7 @@ char		**fill_phrase(char **phrase)
       phrase[i] = strdup(line + 1);
       phrase[i][(int)strcspn(phrase[i], "\n")] = '\0';
     }
+  fclose(file);
+  /**************************************************************************************/
   return (phrase);
 }
