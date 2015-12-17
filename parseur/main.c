@@ -19,7 +19,7 @@ struct command listecommandesnaturel;
 char *cleanstring(char *chainedecaractere)
 
 {
-
+/* Si le dernier caractère de la chaine de caractère est \n, on supprime le dernier caractère de la chaine */
     if ((strlen(chainedecaractere)>0) && (chainedecaractere[strlen (chainedecaractere) - 1] == '\n'))
             chainedecaractere[strlen (chainedecaractere) - 1] = '\0';
 
@@ -50,18 +50,19 @@ char *replace_str(char *str, char *orig, char *rep)
 
 
 
-int compterlignes()
+int compterlignes(char *lang)
 
 {
     DIR*    FD;
     struct  dirent* in_file;
     FILE    *entry_file;
     char    cwd[1024];
-    char    dossierdictionnaires[50] = "dictionnaires/";
     char    buffer[BUFSIZ];
     int     m = 0;
     char    *nomfichier=NULL;
     int     i = 1;
+    char    dossierdictionnaires[50] = "";
+
 
 
 
@@ -77,10 +78,28 @@ int compterlignes()
     return 1;
     }
 
+/* Si la fonction est lancée en mode français, alors le dossier contenant les dictionnaires est dictionnaires/  */
+    if(strcmp(lang,"fr") == 0 )
+    {
+    strcpy(dossierdictionnaires,"dictionnaires/");
+    strcat(cwd, "/dictionnaires/");
+
+    }
+
+/* Si la fonction est lancée en mode anglais, alors le dossier contenant les dictionnaires est dictionnaires_en/  */
+
+    else if (strcmp(lang,"en") == 0)
+
+    {
+    strcpy(dossierdictionnaires,"dictionnaires_en/");
+    strcat(cwd, "/dictionnaires_en/");
+
+    }
+
 
 
     /* On scanne les fichiers contenus dans le répretoire dictionnaires/ */
-    if (NULL == (FD = opendir (strcat(cwd, "/dictionnaires/"))))
+    if (NULL == (FD = opendir (cwd)))
     {
         fprintf(stderr, "Error : Failed to open input directory - %s\n", strerror(errno));
 
@@ -145,8 +164,25 @@ int compterlignes()
 
         fclose(entry_file);
 
-        strcpy (dossierdictionnaires, "dictionnaires/");
+        if(strcmp(lang,"fr") == 0 )
+        {
+            strcpy (dossierdictionnaires, "dictionnaires/");
+
+        }
+
+        else if (strcmp(lang,"en") == 0)
+
+        {
+            strcpy (dossierdictionnaires, "dictionnaires_en/");
+
+        }
+
+
     }
+
+    closedir(FD);
+    free(in_file);
+    free(nomfichier);
 
     /* On renvoie le nombre de lignes total (en excluant les commandes) contenu dans les dictionnaires */
 
@@ -163,18 +199,19 @@ int compterlignes()
 
 
 /* This is just a sample code, modify it to meet your need */
-int initialiserdictionnaires(int nombrelignes)
+int initialiserdictionnaires(int nombrelignes,char *lang)
 {
     DIR*    FD;
     struct  dirent* in_file;
     FILE    *entry_file;
     char    cwd[1024];
-    char    dossierdictionnaires[50] = "dictionnaires/";
     char    buffer[BUFSIZ];
     char    *nomfichier=NULL;
     int     i = 1;
     char    *commande=NULL;
     int     p = 0;
+    char    dossierdictionnaires[50] = "";
+
 
     /* On alloue la mémoire nécessaire à notre tableau en 2 dimensions */
 
@@ -196,10 +233,27 @@ int initialiserdictionnaires(int nombrelignes)
     return 1;
     }
 
+/* Si la fonction est lancée en mode français, alors le dossier contenant les dictionnaires est dictionnaires/  */
+    if(strcmp(lang,"fr") == 0 )
+    {
+        strcpy(dossierdictionnaires,"dictionnaires/");
+        strcat(cwd, "/dictionnaires/");
+
+    }
+/* Si la fonction est lancée en mode anglais, alors le dossier contenant les dictionnaires est dictionnaires_en/  */
+
+    else if (strcmp(lang,"en") == 0)
+
+    {
+        strcpy(dossierdictionnaires,"dictionnaires_en/");
+        strcat(cwd, "/dictionnaires_en/");
+
+    }
+
 
 
     /* On scanne les fichiers contenus dans le répretoire dictionnaires/ */
-    if (NULL == (FD = opendir (strcat(cwd, "/dictionnaires/"))))
+    if (NULL == (FD = opendir (cwd)))
     {
         fprintf(stderr, "Error : Failed to open input directory - %s\n", strerror(errno));
 
@@ -281,15 +335,35 @@ int initialiserdictionnaires(int nombrelignes)
         fclose(entry_file);
 
 
+        if(strcmp(lang,"fr") == 0 )
+        {
+            strcpy (dossierdictionnaires, "dictionnaires/");
 
-        strcpy (dossierdictionnaires, "dictionnaires/");
+        }
+
+        else if (strcmp(lang,"en") == 0)
+
+        {
+            strcpy (dossierdictionnaires, "dictionnaires_en/");
+
+        }
+
+
+
+
+
     }
+
+    closedir(FD);
+    free(in_file);
+    free(nomfichier);
+    free(commande);
 
 
     return 0;
 }
 
-int modeexpert(int nombrelignes)
+int modeexpert(int nombrelignes,char *lang)
 
 {
     int     i=0;
@@ -304,7 +378,27 @@ int modeexpert(int nombrelignes)
 
     entree = calloc(256, sizeof(char));
 
+    /* Si la fonction est lancée en mode français, alors on affiche un message en français  */
+
+    if(strcmp(lang,"fr") == 0 )
+    {
+
     printf ("Que souhaitez-vous faire maintenant ?\n");
+
+    }
+
+    /* Si la fonction est lancée en mode anglais, alors on affiche un message en anglais  */
+
+    else if (strcmp(lang,"en") == 0)
+
+    {
+
+    printf ("What do you want to do now ?\n");
+
+
+    }
+
+
 
     fgets (entree, 256, stdin);
 
@@ -320,10 +414,15 @@ int modeexpert(int nombrelignes)
         keyword = strdup(listecommandesnaturel.keyWords[i]);
         keyword = strdup(cleanstring(keyword));
 
+        /* On stocke la longueur du mot-clé dans la variable p */
+
         p = strlen(keyword);
 
+        /* On prend les p premiers caractères de l'entrée de l'utilisateur */
 
         entreetronquee = strndup(entree,p);
+
+        /* Si la longueur de la commande ne fait qu'un caractère et que le mot-clé est dans l'entrée de l'utilisateur alors on le supprime */
 
         if (strlen(listecommandesnaturel.cmd[i]) == 1 && strstr(entree,keyword) != 0 )
         {
@@ -331,6 +430,8 @@ int modeexpert(int nombrelignes)
         entree = strdup(replace_str(entree,keyword,""));
 
         }
+
+        /* Si l'entrée tronquée est égale au mot-clé alors on remplace l'entrée tronquée par la commande correspondante */
 
         if (strcmp(entreetronquee,keyword) == 0 && strlen(listecommandesnaturel.cmd[i]) > 1 && strlen(listecommandesnaturel.keyWords[i]) > 1 )
 
@@ -343,6 +444,9 @@ int modeexpert(int nombrelignes)
             free(entree);
             free(listecommandesnaturel.keyWords);
             free(listecommandesnaturel.cmd);
+            free(keyword);
+            free(cmd);
+            free(entreetronquee);
             exit(0);
 
             }
@@ -353,21 +457,46 @@ int modeexpert(int nombrelignes)
             system(cmd);
 
             free(entree);
+            free(keyword);
+            free(cmd);
+            free(entreetronquee);
 
-            modeexpert(nombrelignes);
+            modeexpert(nombrelignes,lang);
 
             }
 
         }
 
+        /* Si on a atteint la fin du tableau et qu'on a rien trouvé alors on rappelle la fonction */
+
         if (i == (nombrelignes - 1))
+        {
+
+        if(strcmp(lang,"fr") == 0 )
         {
 
         printf("Entrée introuvable, veuillez reformulez votre demande.\n");
 
-        free(entree);
+        }
 
-        modeexpert(nombrelignes);
+        else if (strcmp(lang,"en") == 0)
+
+        {
+
+        printf ("We cannot satisfy your demand. Please rephrase your request ?\n");
+
+
+        }
+
+
+
+
+        free(entree);
+        free(keyword);
+        free(cmd);
+        free(entreetronquee);
+
+        modeexpert(nombrelignes,lang);
         }
         i++;
 
@@ -385,6 +514,9 @@ int modeexpert(int nombrelignes)
     free(entree);
     free(listecommandesnaturel.keyWords);
     free(listecommandesnaturel.cmd);
+    free(keyword);
+    free(cmd);
+    free(entreetronquee);
 
     return 0;
 
@@ -396,11 +528,11 @@ int main()
 {
 int    nombrelignes;
 
-nombrelignes = compterlignes();
+nombrelignes = compterlignes("fr");
 
-initialiserdictionnaires(nombrelignes);
+initialiserdictionnaires(nombrelignes,"fr");
 
-modeexpert(nombrelignes);
+modeexpert(nombrelignes,"fr");
 
 return 0;
 }
