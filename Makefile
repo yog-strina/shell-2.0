@@ -8,6 +8,12 @@ SRCS	=	expert_shell.c \
 		menu3_en.c \
 		menu4_en.c \
 		menu5_en.c \
+		assist_fr.c \
+		menu1_fr.c \
+		menu2_fr.c \
+		menu3_fr.c \
+		menu4_fr.c \
+		menu5_fr.c \
 		main.c \
 		easter.c \
 	  	game_cmd.c \

@@ -26,6 +26,8 @@ int main(int argc, char *argv[])
 	case 2:
 	  if (param[1] == 1)
 	    assist_en();
+	  else if (param[1] == 2)
+	    assist_fr();
 	  break;
 	case 3:
 	  expert_shell();
